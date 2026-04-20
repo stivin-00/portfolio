@@ -1,0 +1,228 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================
+   CSS Custom Properties
+   ===================== */
+:root {
+  --color-primary: #f8fafc;
+  --color-secondary: #0f172a;
+  --color-accent: #7c3aed;
+  --color-accent-light: #a78bfa;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f5f9;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+
+  color-scheme: light;
+}
+
+.dark {
+  --color-primary: #0a0a0f;
+  --color-secondary: #e2e8f0;
+  --color-accent: #8b5cf6;
+  --color-accent-light: #c4b5fd;
+  --color-surface: #13131a;
+  --color-surface-2: #1e1e2e;
+  --color-muted: #94a3b8;
+  --color-border: #2d2d3f;
+  --color-text: #f1f5f9;
+  --color-text-muted: #94a3b8;
+
+  color-scheme: dark;
+}
+
+/* =====================
+   Global Reset & Base
+   ===================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* =====================
+   Scrollbar
+   ===================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 3px;
+}
+
+/* =====================
+   Utility Classes
+   ===================== */
+.section-padding {
+  @apply px-6 md:px-12 lg:px-24 xl:px-32;
+}
+
+.section-title {
+  @apply text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight;
+}
+
+.gradient-text {
+  color: var(--color-accent);
+}
+
+.gradient-bg {
+  background: var(--color-accent);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(124, 58, 237, 0.15);
+  border-color: var(--color-accent);
+}
+
+.btn-primary {
+  @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300;
+  background: var(--color-accent);
+}
+
+.btn-primary:hover {
+  opacity: 0.88;
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  @apply inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300;
+  border: 2px solid var(--color-accent);
+  color: var(--color-accent);
+}
+
+.btn-outline:hover {
+  background: var(--color-accent);
+  color: white;
+  box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+  transform: translateY(-2px);
+}
+
+/* =====================
+   Gradient Borders
+   ===================== */
+.gradient-border {
+  position: relative;
+  border-radius: 16px;
+  background: var(--color-surface);
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(135deg, #7c3aed, #06b6d4, #7c3aed);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* =====================
+   Noise Texture Overlay
+   ===================== */
+.noise {
+  position: relative;
+}
+.noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* =====================
+   Animations
+   ===================== */
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* =====================
+   Tag Pills
+   ===================== */
+.tag {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+  background: var(--color-surface-2);
+  color: var(--color-accent);
+  border: 1px solid var(--color-border);
+}
+
+/* =====================
+   Timeline (Experience)
+   ===================== */
+.vertical-timeline-element-content {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  color: var(--color-text) !important;
+}
+
+.vertical-timeline-element-content-arrow {
+  border-right-color: var(--color-border) !important;
+}
+
+.vertical-timeline::before {
+  background: var(--color-border) !important;
+}
+
+/* =====================
+   Focus Visible
+   ===================== */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
