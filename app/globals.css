@@ -1,0 +1,228 @@
+:root {
+  /* Pure black and white vintage theme */
+  --bg: #000000;
+  --bg-raised: #0a0a0a;
+  --paper: #ffffff;
+  --ink: #f5f5f5;
+  --ink-dim: #cccccc;
+  --ink-mute: #999999;
+  --line: #1a1a1a;
+  --line-strong: #2a2a2a;
+  --hair: rgba(245, 245, 245, 0.12);
+  --accent: #ffffff;
+
+  --font-display: var(--font-playfair), var(--font-fraunces), "Playfair Display", "Fraunces", ui-serif, Georgia, serif;
+  --font-body: var(--font-archivo), "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-stamp: var(--font-elite), "Special Elite", ui-monospace, monospace;
+
+  --section-pad: clamp(4.5rem, 11vw, 10rem);
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+}
+
+* { box-sizing: border-box; }
+
+html {
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  letter-spacing: 0.01em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { 
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+  }
+  
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+::selection {
+  background: var(--paper);
+  color: var(--bg);
+}
+
+a { color: inherit; }
+button { font-family: inherit; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+p { margin: 0; }
+
+.stamp-type {
+  font-family: var(--font-stamp);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 4px;
+}
+
+/* ---------- Film grain / halftone overlay (procedural canvas, see GrainOverlay.tsx) ---------- */
+.grain-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+}
+
+/* ---------- Hairline vignette so the page reads like a printed plate ---------- */
+.plate-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  box-shadow: inset 0 0 28vw 4vw rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* ---------- Layout shell ---------- */
+.shell {
+  position: relative;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-top: var(--section-pad);
+  padding-bottom: var(--section-pad);
+}
+
+.plate-tag {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  color: var(--ink-mute);
+  font-size: 0.72rem;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+.plate-tag:hover {
+  opacity: 1;
+  margin-bottom: 3rem;
+}
+.plate-tag::before {
+  content: "";
+  width: 34px;
+  height: 1px;
+  background: var(--ink-mute);
+  align-self: center;
+}
+
+/* ---------- Torn-edge divider between plates (procedural SVG, see TornDivider.tsx) ---------- */
+.torn-divider {
+  display: block;
+  width: 100%;
+  height: 26px;
+  color: var(--bg);
+}
+.torn-divider svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Custom loupe cursor ---------- */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 34px;
+  height: 34px;
+  pointer-events: none;
+  z-index: 999;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cursor { display: block; }
+}
+.cursor svg { width: 100%; height: 100%; }
+
+/* ---------- Utility ---------- */
+.eyebrow {
+  font-family: var(--font-stamp);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+.mask-line {
+  overflow: hidden;
+  display: block;
+}
+.mask-line > span {
+  display: inline-block;
+  transform: translateY(105%);
+  will-change: transform;
+}
+
+/* Fade in from different directions */
+.fade-up {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.fade-down {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+
+.fade-left {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.fade-right {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.scale-in {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+  .mask-line > span { transform: none; }
+  .fade-up, .fade-down, .fade-left, .fade-right, .scale-in { 
+    opacity: 1; 
+    transform: none; 
+  }
+  * { animation: none !important; transition: none !important; }
+}

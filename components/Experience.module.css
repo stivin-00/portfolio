@@ -1,0 +1,76 @@
+.list {
+  position: relative;
+  border-top: 1px solid var(--line);
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  padding: 2.2rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+@media (min-width: 780px) {
+  .entry {
+    grid-template-columns: 200px 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.period {
+  font-family: var(--font-stamp);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.location {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--ink-mute);
+}
+
+.company {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  color: var(--ink);
+}
+
+.role {
+  margin-top: 0.3rem;
+  font-family: var(--font-stamp);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.achievements {
+  margin-top: 1rem;
+  padding-left: 1.2rem;
+  list-style: none;
+  max-width: 70ch;
+}
+
+.achievement {
+  position: relative;
+  color: var(--ink-dim);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin-bottom: 0.65rem;
+  padding-left: 0.8rem;
+}
+
+.achievement::before {
+  content: '—';
+  position: absolute;
+  left: -0.5rem;
+  color: var(--ink-mute);
+  font-weight: 400;
+}
+
+.achievement:last-child {
+  margin-bottom: 0;
+}
