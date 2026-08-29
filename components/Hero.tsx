@@ -34,7 +34,7 @@ export default function Hero() {
       <div className="shell">
         <div className={styles.content}>
           <div className={styles.eyebrowRow}>
-            <span className="eyebrow">Specimen No. 001 — {profile.location}</span>
+            <span className="eyebrow">intro</span>
           </div>
 
           <h1 className={styles.title}>

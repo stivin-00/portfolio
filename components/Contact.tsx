@@ -30,10 +30,10 @@ export default function Contact() {
             Phone
             <a href={`tel:${profile.phone.replace(/\s+/g, "")}`}>{profile.phone}</a>
           </div>
-          <div className={styles.col}>
+          {/* <div className={styles.col}>
             Based in
             <span className="value">{profile.location}</span>
-          </div>
+          </div> */}
           <div className={styles.col}>
             Elsewhere
             <a href={profile.github} target="_blank" rel="noopener noreferrer">

@@ -25,7 +25,7 @@ export default function About() {
           <div>
             <div className={styles.body}>
               <p className="reveal">
-                I&apos;m {profile.name}, working under the name Stivin — a frontend and
+                I&apos;m {profile.name}, also known as Stivin — a frontend and
                 full-stack engineer based in {profile.location}. Over the last{" "}
                 {profile.experience}, I&apos;ve shipped production interfaces across
                 fintech, logistics, healthcare and enterprise platforms, usually owning
