@@ -19,7 +19,7 @@ export default function Footer() {
         }}
       >
         <span>© {new Date().getFullYear()} Ekele Stephen Agbakwuru — End of dossier</span>
-        <span style={{ opacity: 0.7 }}>Built with Next.js, GSAP &amp; Three.js</span>
+        <span>Built with Next.js, GSAP &amp; Three.js</span>
       </div>
     </footer>
   );
