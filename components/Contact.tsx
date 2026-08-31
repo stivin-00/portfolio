@@ -1,6 +1,15 @@
+"use client";
+
 import styles from "./Contact.module.css";
 import Stamp from "./Stamp";
 import { profile } from "@/lib/data";
+import {
+  trackEmailClick,
+  trackGitHubClick,
+  trackLinkedInClick,
+  trackPhoneClick,
+  trackResumeDownload,
+} from "@/lib/analytics";
 
 export default function Contact() {
   return (
@@ -11,7 +20,11 @@ export default function Contact() {
         <div className={`${styles.wrap} reveal`}>
           <h2 className={styles.big}>
             Have something to build?{" "}
-            <a href={`mailto:${profile.email}`} className={styles.bigLink}>
+            <a
+              href={`mailto:${profile.email}`}
+              className={styles.bigLink}
+              onClick={trackEmailClick}
+            >
               Let&apos;s talk.
             </a>
           </h2>
@@ -24,11 +37,18 @@ export default function Contact() {
         <div className={styles.row}>
           <div className={styles.col}>
             Email
-            <a href={`mailto:${profile.email}`}>{profile.email}</a>
+            <a href={`mailto:${profile.email}`} onClick={trackEmailClick}>
+              {profile.email}
+            </a>
           </div>
           <div className={styles.col}>
             Phone
-            <a href={`tel:${profile.phone.replace(/\s+/g, "")}`}>{profile.phone}</a>
+            <a
+              href={`tel:${profile.phone.replace(/\s+/g, "")}`}
+              onClick={trackPhoneClick}
+            >
+              {profile.phone}
+            </a>
           </div>
           {/* <div className={styles.col}>
             Based in
@@ -36,10 +56,20 @@ export default function Contact() {
           </div> */}
           <div className={styles.col}>
             Elsewhere
-            <a href={profile.github} target="_blank" rel="noopener noreferrer">
+            <a
+              href={profile.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={trackGitHubClick}
+            >
               GitHub
             </a>
-            <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+            <a
+              href={profile.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={trackLinkedInClick}
+            >
               LinkedIn
             </a>
             <a href={profile.site} target="_blank" rel="noopener noreferrer">
@@ -53,6 +83,7 @@ export default function Contact() {
             href="/Ekele_Stephen_Agbakwuru_CV.pdf"
             download="Ekele_Stephen_Agbakwuru_CV.pdf"
             className={styles.cvButton}
+            onClick={trackResumeDownload}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />

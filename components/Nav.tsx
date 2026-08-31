@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import styles from "./Nav.module.css";
+import { trackCTAClick } from "@/lib/analytics";
 
 const LINKS = [
   { href: "#about", label: "About" },
@@ -49,7 +50,12 @@ export default function Nav() {
           </a>
         ))}
       </nav>
-      <a ref={ctaRef} href="#contact" className={styles.cta}>
+      <a
+        ref={ctaRef}
+        href="#contact"
+        className={styles.cta}
+        onClick={() => trackCTAClick("Open dossier")}
+      >
         Open dossier ↗
       </a>
     </header>

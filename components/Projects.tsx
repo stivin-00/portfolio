@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Projects.module.css";
 import { projects } from "@/lib/data";
 import ProjectMark from "./ProjectMark";
+import { trackProjectView } from "@/lib/analytics";
 
 export default function Projects() {
   const pinRef = useRef<HTMLDivElement>(null);
@@ -69,6 +70,7 @@ export default function Projects() {
                   target={p.href.startsWith("http") ? "_blank" : undefined}
                   rel={p.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   className={styles.link}
+                  onClick={() => trackProjectView(p.name, p.href)}
                 >
                   View project ↗
                 </a>
