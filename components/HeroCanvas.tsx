@@ -11,21 +11,28 @@ export default function HeroCanvas() {
   useEffect(() => {
     if (!containerRef.current || !canvasRef.current) return;
 
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const scene = new HeroScene(canvasRef.current, containerRef.current);
+    let scene: HeroScene | null = null;
+    let tween: gsap.core.Tween | null = null;
 
-    const state = { progress: 0 };
-    const tween = gsap.to(state, {
-      progress: 1,
-      duration: prefersReduced ? 0.01 : 2.6,
-      delay: prefersReduced ? 0 : 0.3,
-      ease: "power3.out",
-      onUpdate: () => scene.setProgress(state.progress),
-    });
+    try {
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      scene = new HeroScene(canvasRef.current, containerRef.current);
+
+      const state = { progress: 0 };
+      tween = gsap.to(state, {
+        progress: 1,
+        duration: prefersReduced ? 0.01 : 2.6,
+        delay: prefersReduced ? 0 : 0.3,
+        ease: "power3.out",
+        onUpdate: () => scene?.setProgress(state.progress),
+      });
+    } catch (error) {
+      console.warn("WebGL not supported or context could not be created:", error);
+    }
 
     return () => {
-      tween.kill();
-      scene.dispose();
+      tween?.kill();
+      scene?.dispose();
     };
   }, []);
 

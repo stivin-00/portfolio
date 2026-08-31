@@ -209,10 +209,11 @@ export class HeroScene {
     cancelAnimationFrame(this.raf);
     window.removeEventListener("resize", this.onResize);
     window.removeEventListener("pointermove", this.onPointerMove);
-    this.lines.geometry.dispose();
-    this.points.geometry.dispose();
-    this.linesMat.dispose();
-    this.pointsMat.dispose();
-    this.renderer.dispose();
+    this.lines?.geometry?.dispose();
+    this.points?.geometry?.dispose();
+    this.linesMat?.dispose();
+    this.pointsMat?.dispose();
+    this.renderer?.forceContextLoss();
+    this.renderer?.dispose();
   }
 }
