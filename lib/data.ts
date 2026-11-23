@@ -1,3 +1,9 @@
+/**
+ * All site copy lives here. Facts only: anything not confirmed is marked with
+ * a TODO and written in neutral wording. Search the repo for "TODO" to find
+ * everything that still needs your input.
+ */
+
 export const profile = {
   name: "Ekele Stephen Agbakwuru",
   handle: "Stivin",
@@ -5,25 +11,102 @@ export const profile = {
   location: "Lagos, Nigeria",
   experience: "4+ years",
   summary:
-    "Four years shipping production interfaces across fintech, logistics, healthcare and enterprise platforms — usually owning the feature end-to-end, from component architecture to API design and deployment.",
+    "4+ years shipping production interfaces across fintech, logistics, healthcare and enterprise products, usually owning the feature end to end: component architecture, API design and deployment.",
   email: "ekeleagbakwuru9@gmail.com",
   phone: "+234 812 358 3317",
+  whatsapp: "https://wa.me/2348123583317",
   github: "https://github.com/stivin-00",
   linkedin: "https://linkedin.com/in/ekelestephenagbakwuru",
   site: "https://stivin.vercel.app",
+  cv: "/Ekele_Stephen_Agbakwuru_CV.pdf",
+  workPreference: "Hybrid or remote",
+  currently: {
+    building: "HomexGrid",
+    openTo: "full-time roles (hybrid or remote) and select freelance website projects",
+  },
+  // TODO: add your real response time once you're sure of it, e.g. "I usually reply within 24 hours."
+  // While this is null the contact section shows neutral wording instead.
+  responseTime: null as string | null,
 };
 
-export const stack = [
-  { name: "React", note: "Interfaces & component systems" },
-  { name: "Next.js", note: "Rendering, routing & API routes" },
-  { name: "TypeScript", note: "Type-safe application code" },
-  { name: "Angular", note: "Enterprise frontend systems" },
-  { name: "Vue.js", note: "Progressive frontend framework" },
-  { name: "React Native", note: "Cross-platform mobile" },
-  { name: "Java", note: "Enterprise backend systems" },
-  { name: "NestJS / Node.js", note: "Structured API services" },
-  { name: "PostgreSQL / MongoDB", note: "Data & persistence" },
-  { name: "Docker", note: "Build & deploy pipelines" },
+export const languages = [
+  { name: "English", level: "Fluent" },
+  { name: "Igbo", level: "Fluent" },
+  { name: "Yoruba", level: "Intermediate" },
+  { name: "French", level: "Basic" },
+];
+
+export type StackItem = { name: string; note?: string };
+
+export const stackGroups: { group: string; items: StackItem[] }[] = [
+  {
+    group: "Frontend",
+    items: [
+      { name: "React" },
+      { name: "Next.js" },
+      { name: "Angular", note: "v20 most used" },
+      { name: "Vue.js" },
+      { name: "TypeScript" },
+      { name: "JavaScript" },
+      { name: "Redux Toolkit" },
+      { name: "RTK Query" },
+      { name: "Tailwind CSS" },
+      { name: "Bootstrap" },
+      { name: "Material UI" },
+      { name: "Ant Design" },
+      { name: "Radix UI" },
+      { name: "React Hook Form" },
+      { name: "Zod" },
+      { name: "Framer Motion" },
+      { name: "GSAP" },
+      { name: "Three.js" },
+    ],
+  },
+  {
+    group: "Mobile",
+    items: [{ name: "React Native (Expo)" }],
+  },
+  {
+    group: "Backend",
+    items: [
+      { name: "Node.js" },
+      { name: "Express" },
+      { name: "NestJS" },
+      { name: "Java" },
+      { name: "Spring Boot" },
+      { name: "REST APIs" },
+      { name: "Prisma" },
+    ],
+  },
+  {
+    group: "Data",
+    items: [{ name: "PostgreSQL" }, { name: "MongoDB" }, { name: "Redis" }, { name: "Flyway" }],
+  },
+  {
+    group: "Integrations",
+    items: [
+      { name: "Stripe" },
+      { name: "Paystack" },
+      { name: "Google Calendar" },
+      { name: "WhatsApp Cloud API" },
+      { name: "Strapi CMS" },
+    ],
+  },
+  {
+    group: "Delivery",
+    items: [
+      { name: "Docker" },
+      { name: "Git" },
+      { name: "GitHub" },
+      { name: "GitLab CI/CD" },
+      { name: "Vercel" },
+      { name: "Railway" },
+      { name: "Agile / Scrum" },
+      { name: "TDD" },
+      { name: "Code review" },
+      { name: "RBAC & JWT auth" },
+    ],
+  },
 ];
 
 export const experience = [
@@ -32,11 +115,16 @@ export const experience = [
     role: "Frontend Engineer",
     period: "Jun 2024 — Present",
     location: "Lagos, Nigeria",
+    products: ["SoftAce EDMS", "SoftSuite", "SoftPay", "LAWMA Billing Portal", "PlateDetect"],
     achievements: [
-      "Architected reusable component modules across ERP, fintech, billing and incident-monitoring platforms",
-      "Participated in frontend development of SoftAce EDMS using Angular and React for enterprise document management",
-      "Designed and implemented workflow and records-management systems serving multiple enterprise clients",
-      "Built scalable Redux state management patterns adopted across multiple product teams"
+      "Led frontend development of SoftAce EDMS in Angular: a document capture, workflow and records-management system used by enterprise clients across multiple organizations.",
+      "Built reusable frontend modules across ERP, fintech, billing and incident-monitoring platforms: SoftSuite (ERP), SoftPay (a fintech app for businesses, in Vue.js), the LAWMA Billing Portal and PlateDetect (an incident-monitoring dashboard).",
+      "Shipped a WhatsApp Cloud API feature on PlateDetect that sends offenders WhatsApp messages and bill reminders.",
+      "Inherited the SoftSuite frontend written in vanilla JavaScript and migrated it to TypeScript with reusable components.",
+      "Worked with a mobile teammate on the SoftSuite mobile app, a deployed app used by real clients.",
+      "Built the corporate websites softsuite.com and softkloud.com in Next.js on the Strapi headless CMS, with blog, demo requests, FAQ, testimonials and pricing managed in the CMS.",
+      "Standardized component and state-management patterns and shipped 10+ client-facing enterprise features in Agile sprints.",
+      "Debugged and improved GitLab CI/CD for the Dockerized LAWMA Billing Portal (concurrent pipeline runs, branch trigger rules).",
     ],
   },
   {
@@ -44,11 +132,12 @@ export const experience = [
     role: "Frontend Engineer — Contract",
     period: "Mar 2024 — Mar 2025",
     location: "Remote",
+    products: [] as string[],
     achievements: [
-      "Delivered logistics and fleet-management dashboards serving 30+ internal users with real-time data",
-      "Optimized high-volume data tables to handle thousands of records without performance degradation",
-      "Implemented React and TypeScript solutions providing real-time fleet operations visibility",
-      "Enhanced data visualization components for complex logistics workflows"
+      "Built logistics and fleet-management dashboards in React and TypeScript for 30+ internal users.",
+      "Built real-time data views for fleet operations.",
+      "Optimized high-volume tables and filters to handle thousands of records.",
+      "Implemented full loading, error and empty-state handling across logistics workflows.",
     ],
   },
   {
@@ -56,11 +145,12 @@ export const experience = [
     role: "Full-Stack Developer",
     period: "Apr 2022 — Mar 2024",
     location: "Lagos, Nigeria",
+    products: [] as string[],
     achievements: [
-      "Built end-to-end healthcare applications with React/Next.js frontends and Node.js backends",
-      "Integrated Stripe payment processing and Google Calendar sync into patient booking system",
-      "Developed scheduling, payments and patient management features for healthcare platforms",
-      "Implemented secure authentication and authorization systems for sensitive healthcare data"
+      "Built healthcare apps for patients and clinicians with React and Next.js.",
+      "Integrated Stripe payments and Google Calendar sync into a booking system.",
+      "Structured backend services as Next.js API routes in a microservice-oriented pattern.",
+      "Tightened input validation and async error handling.",
     ],
   },
   {
@@ -68,11 +158,11 @@ export const experience = [
     role: "Software Engineer Intern",
     period: "Aug 2021 — Mar 2022",
     location: "Lagos, Nigeria",
+    products: [] as string[],
     achievements: [
-      "Shipped 5+ responsive production features with Next.js, Tailwind CSS and Redux Toolkit",
-      "Resolved 20+ UI defects and cross-browser compatibility issues ahead of key product launches",
-      "Contributed to component library design system used across multiple product features",
-      "Collaborated with design team to implement pixel-perfect responsive interfaces"
+      "Shipped 5+ responsive production features with Next.js, Tailwind CSS and Redux Toolkit.",
+      "Fixed 20+ UI and cross-browser defects.",
+      "Contributed reusable components that were kept in the codebase.",
     ],
   },
 ];

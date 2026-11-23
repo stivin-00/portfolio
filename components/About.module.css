@@ -35,9 +35,10 @@
 .body p + p { margin-top: 1.15rem; }
 
 .facts {
-  margin-top: 2.75rem;
+  margin: 2.75rem 0 0;
   border-top: 1px solid var(--line);
 }
+.facts dd { margin: 0; }
 .factRow {
   display: flex;
   justify-content: space-between;
@@ -52,6 +53,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-mute);
+  flex-shrink: 0;
 }
 .factValue {
   font-family: var(--font-display);

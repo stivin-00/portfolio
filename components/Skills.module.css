@@ -2,13 +2,19 @@
   border-top: 1px solid var(--line);
 }
 
+/* Ledger row: index · group name ····· count, with the materials listed beneath. */
 .item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2.4rem auto 1fr auto;
+  grid-template-areas:
+    "index name leader note"
+    ".     items items items";
   align-items: baseline;
-  padding: 1.45rem 0;
+  column-gap: 1rem;
+  row-gap: 0.9rem;
+  padding: 1.6rem 0;
   border-bottom: 1px solid var(--line);
-  gap: 1rem;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, padding 0.3s ease;
 }
 
 .item:hover {
@@ -17,35 +23,36 @@
 }
 
 .index {
+  grid-area: index;
   font-family: var(--font-stamp);
   font-size: 0.62rem;
   color: var(--ink-mute);
-  width: 2.4rem;
-  flex-shrink: 0;
 }
 
 .name {
+  grid-area: name;
   font-family: var(--font-display);
   font-size: clamp(1.3rem, 2.5vw, 1.85rem);
   font-weight: 600;
   color: var(--ink);
   white-space: nowrap;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
   letter-spacing: -0.01em;
 }
-.item:hover .name { 
+.item:hover .name {
   color: var(--paper);
   transform: translateX(2px);
 }
 
 .leader {
-  flex: 1;
+  grid-area: leader;
   height: 0;
   border-bottom: 2px dotted var(--line-strong);
   transform: translateY(-0.55em);
 }
 
 .note {
+  grid-area: note;
   font-family: var(--font-stamp);
   font-size: 0.62rem;
   color: var(--ink-mute);
@@ -53,4 +60,46 @@
   letter-spacing: 0.06em;
   white-space: nowrap;
   text-align: right;
+}
+
+.items {
+  grid-area: items;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 0.35rem;
+  max-width: 78ch;
+  color: var(--ink-dim);
+  font-size: 0.98rem;
+  font-weight: 300;
+  line-height: 1.6;
+}
+.items li {
+  white-space: nowrap;
+}
+.items li + li::before {
+  content: "·";
+  margin: 0 0.6rem;
+  color: var(--line-strong);
+}
+
+.itemNote {
+  font-family: var(--font-stamp);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+@media (max-width: 560px) {
+  .item {
+    grid-template-columns: 2rem 1fr auto;
+    grid-template-areas:
+      "index name note"
+      ".     items items";
+  }
+  .leader { display: none; }
+  .items li { white-space: normal; }
 }
