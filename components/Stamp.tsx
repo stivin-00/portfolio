@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * A vintage seal: two lines of small caps set along circular paths that
  * are computed from the given radius, plus a center mark. No image —
@@ -10,14 +8,16 @@ export default function Stamp({
   inner = "FRONTEND · FULL-STACK",
   size = 140,
   className,
+  id = "stamp-path",
 }: {
   outer?: string;
   inner?: string;
   size?: number;
   className?: string;
+  /** Unique per page: the text path is referenced by id. */
+  id?: string;
 }) {
   const r = 62;
-  const id = "stampPath";
 
   return (
     <svg

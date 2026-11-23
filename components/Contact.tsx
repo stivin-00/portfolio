@@ -30,7 +30,7 @@ export default function Contact() {
           </h3>
 
           <div className={styles.stampWrap}>
-            <Stamp size={128} inner="OPEN TO WORK" />
+            <Stamp size={128} inner="OPEN TO WORK" id="stamp-contact" />
           </div>
         </div>
 
