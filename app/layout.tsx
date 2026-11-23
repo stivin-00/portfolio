@@ -1,7 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Archivo, Special_Elite, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
+import GrainOverlay from "@/components/GrainOverlay";
+import Cursor from "@/components/Cursor";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import { BOOT_SCRIPT } from "@/lib/intro";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -46,11 +51,14 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#000000",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -62,25 +70,24 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${fraunces.variable} ${archivo.variable} ${specialElite.variable} ${playfair.variable}`}
+      // The boot script adds data-js / data-intro before hydration.
+      suppressHydrationWarning
     >
       <head>
-        <link
-          rel="preload"
-          href="/_next/static/css/app/layout.css"
-          as="style"
-        />
-        <link
-          rel="preconnect"
-          href="https://fonts.googleapis.com"
-        />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
+        <script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
       </head>
       <body>
-        <AnalyticsProvider>{children}</AnalyticsProvider>
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
+        <GrainOverlay />
+        <div className="plate-vignette" aria-hidden="true" />
+        <Cursor />
+        <AnalyticsProvider>
+          <Nav />
+          {children}
+          <Footer />
+        </AnalyticsProvider>
       </body>
     </html>
   );

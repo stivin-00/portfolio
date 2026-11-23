@@ -6,6 +6,7 @@ import HeroCanvas from "./HeroCanvas";
 import Stamp from "./Stamp";
 import styles from "./Hero.module.css";
 import { profile } from "@/lib/data";
+import { onHeroReveal } from "@/lib/intro";
 
 export default function Hero() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -18,10 +19,19 @@ export default function Hero() {
 
     const lines = root.querySelectorAll(".mask-line > span");
     const rest = root.querySelectorAll(".reveal");
+    let tl: gsap.core.Timeline | null = null;
 
-    const tl = gsap.timeline({ delay: 2.2 });
-    tl.to(lines, { y: "0%", duration: 1.1, stagger: 0.09, ease: "power4.out" });
-    tl.to(rest, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: "power3.out" }, "-=0.7");
+    // Waits for the title card's iris-wipe on first visit; starts at once otherwise.
+    const stop = onHeroReveal(() => {
+      tl = gsap.timeline();
+      tl.to(lines, { y: "0%", duration: 1.1, stagger: 0.09, ease: "power4.out" });
+      tl.to(rest, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: "power3.out" }, "-=0.7");
+    });
+
+    return () => {
+      stop();
+      tl?.kill();
+    };
   }, []);
 
   return (

@@ -4,11 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import styles from "./IntroSequence.module.css";
 import { profile } from "@/lib/data";
+import { INTRO_REVEAL_EVENT } from "@/lib/intro";
 
 const NAME = profile.handle.toUpperCase() + " — " + profile.name.toUpperCase();
 
-export default function IntroSequence({ onDone }: { onDone: () => void }) {
-  const [visible, setVisible] = useState(true);
+/**
+ * Opening title card: typewriter reveal + iris-wipe. Plays once per session,
+ * only on the home page, never for prefers-reduced-motion. Whether it plays is
+ * decided before first paint by the boot script in app/layout.tsx, so repeat
+ * visitors never see a flash of the card and no-JS visitors never get stuck
+ * behind it.
+ */
+export default function IntroSequence() {
+  const [done, setDone] = useState(false);
   const [typed, setTyped] = useState("");
   const wrapRef = useRef<HTMLDivElement>(null);
   const subRef = useRef<HTMLDivElement>(null);
@@ -16,40 +24,43 @@ export default function IntroSequence({ onDone }: { onDone: () => void }) {
   const cursorRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const alreadySeen = sessionStorage.getItem("intro-seen");
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (alreadySeen || reduced) {
-      setVisible(false);
-      onDone();
+    const root = document.documentElement;
+    if (root.dataset.intro !== "play") {
+      setDone(true);
       return;
     }
 
+    try {
+      sessionStorage.setItem("intro-seen", "1");
+    } catch {
+      /* storage unavailable: the card simply plays again next time */
+    }
     document.body.style.overflow = "hidden";
-    sessionStorage.setItem("intro-seen", "1");
 
     const state = { n: 0 };
     const tl = gsap.timeline({
       onComplete: () => {
+        root.dataset.intro = "done";
         document.body.style.overflow = "";
-        setVisible(false);
-        onDone();
+        setDone(true);
       },
     });
 
     tl.to(cursorRef.current, { opacity: 1, duration: 0.4, repeat: 5, yoyo: true, ease: "steps(1)" }, 0);
-
     tl.to(state, {
       n: NAME.length,
       duration: NAME.length * 0.045,
       ease: "none",
       onUpdate: () => setTyped(NAME.slice(0, Math.floor(state.n))),
     });
-
     tl.to(subRef.current, { opacity: 1, duration: 0.5 }, "-=0.1");
     tl.to(roleRef.current, { opacity: 1, duration: 0.5 }, "-=0.3");
     tl.to({}, { duration: 0.55 });
     tl.to(cursorRef.current, { opacity: 0, duration: 0.2 }, "<");
+    // The hero starts its own reveal as the iris opens.
+    tl.call(() => {
+      window.dispatchEvent(new Event(INTRO_REVEAL_EVENT));
+    });
     tl.to(wrapRef.current, {
       clipPath: "circle(0% at 50% 50%)",
       duration: 0.9,
@@ -60,18 +71,17 @@ export default function IntroSequence({ onDone }: { onDone: () => void }) {
       tl.kill();
       document.body.style.overflow = "";
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!visible) return null;
+  if (done) return null;
 
   return (
-    <div ref={wrapRef} className={styles.wrap} role="presentation">
+    <div ref={wrapRef} className={styles.wrap} aria-hidden="true">
       <div className={styles.frame}>
-        <span className={`${styles.corner}`} style={{ top: -1, left: -1 }} />
-        <span className={`${styles.corner}`} style={{ top: -1, right: -1 }} />
-        <span className={`${styles.corner}`} style={{ bottom: -1, left: -1 }} />
-        <span className={`${styles.corner}`} style={{ bottom: -1, right: -1 }} />
+        <span className={styles.corner} style={{ top: -1, left: -1 }} />
+        <span className={styles.corner} style={{ top: -1, right: -1 }} />
+        <span className={styles.corner} style={{ bottom: -1, left: -1 }} />
+        <span className={styles.corner} style={{ bottom: -1, right: -1 }} />
       </div>
 
       <div className={styles.title}>

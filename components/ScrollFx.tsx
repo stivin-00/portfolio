@@ -93,20 +93,6 @@ export default function ScrollFx() {
           scrollTrigger: { trigger: els[0], start: "top 85%" },
         });
       });
-
-      // Parallax effect for section backgrounds
-      const sections = document.querySelectorAll("section");
-      sections.forEach((section) => {
-        gsap.to(section, {
-          scrollTrigger: {
-            trigger: section,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
-          },
-          ease: "none",
-        });
-      });
     });
 
     return () => ctx.revert();

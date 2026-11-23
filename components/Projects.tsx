@@ -46,9 +46,9 @@ export default function Projects() {
         <span className={`${styles.sprockets} ${styles.sprocketsBottom}`} aria-hidden="true" />
 
         <div className={`shell ${styles.tagRow}`}>
-          <div className="plate-tag stamp-type" style={{ marginBottom: 0 }}>
+          <h2 className="plate-tag stamp-type" style={{ marginBottom: 0 }}>
             Projects — Selected Works
-          </div>
+          </h2>
         </div>
 
         <div ref={trackRef} className={styles.track}>

@@ -23,6 +23,8 @@
 
 html {
   background: var(--bg);
+  /* Keeps anchored headings clear of the fixed nav. */
+  scroll-padding-top: 90px;
 }
 
 body {
@@ -39,14 +41,7 @@ body {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html { 
-    scroll-behavior: smooth;
-    scroll-padding-top: 100px;
-  }
-  
-  * {
-    scroll-behavior: smooth;
-  }
+  html { scroll-behavior: smooth; }
 }
 
 ::selection {
@@ -75,9 +70,40 @@ p { margin: 0; }
 }
 
 :focus-visible {
-  outline: 1px solid var(--ink);
+  outline: 2px solid var(--ink);
   outline-offset: 4px;
 }
+main:focus { outline: none; }
+
+/* ---------- Accessibility helpers ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 300;
+  padding: 0.75rem 1.1rem;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-stamp);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
 
 /* ---------- Film grain / halftone overlay (procedural canvas, see GrainOverlay.tsx) ---------- */
 .grain-canvas {
@@ -114,18 +140,21 @@ p { margin: 0; }
   padding-bottom: var(--section-pad);
 }
 
+/* Section label. Rendered as the section's <h2>. */
 .plate-tag {
   display: flex;
   align-items: baseline;
   gap: 0.85rem;
+  margin: 0 0 clamp(2.5rem, 5vw, 3.5rem);
   color: var(--ink-mute);
   font-size: 0.72rem;
+  font-weight: 400;
+  line-height: 1.6;
   opacity: 0.9;
   transition: opacity 0.3s ease;
 }
 .plate-tag:hover {
   opacity: 1;
-  margin-bottom: 3rem;
 }
 .plate-tag::before {
   content: "";
@@ -133,6 +162,7 @@ p { margin: 0; }
   height: 1px;
   background: var(--ink-mute);
   align-self: center;
+  flex-shrink: 0;
 }
 
 /* ---------- Torn-edge divider between plates (procedural SVG, see TornDivider.tsx) ---------- */
@@ -175,54 +205,29 @@ p { margin: 0; }
   color: var(--ink-dim);
 }
 
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  will-change: opacity, transform;
-}
-
 .mask-line {
   overflow: hidden;
   display: block;
 }
 .mask-line > span {
   display: inline-block;
-  transform: translateY(105%);
-  will-change: transform;
 }
 
-/* Fade in from different directions */
-.fade-up {
-  opacity: 0;
-  transform: translateY(50px);
-}
-
-.fade-down {
-  opacity: 0;
-  transform: translateY(-50px);
-}
-
-.fade-left {
-  opacity: 0;
-  transform: translateX(-50px);
-}
-
-.fade-right {
-  opacity: 0;
-  transform: translateX(50px);
-}
-
-.scale-in {
-  opacity: 0;
-  transform: scale(0.9);
+/*
+ * Starting states for GSAP reveals (see ScrollFx.tsx and Hero.tsx).
+ * Only applied when JavaScript is running ([data-js], set by the boot script
+ * in app/layout.tsx) and motion is allowed, so content is never stuck hidden.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  [data-js] .reveal { opacity: 0; transform: translateY(40px); }
+  [data-js] .mask-line > span { transform: translateY(105%); }
+  [data-js] .fade-up { opacity: 0; transform: translateY(50px); }
+  [data-js] .fade-down { opacity: 0; transform: translateY(-50px); }
+  [data-js] .fade-left { opacity: 0; transform: translateX(-50px); }
+  [data-js] .fade-right { opacity: 0; transform: translateX(50px); }
+  [data-js] .scale-in { opacity: 0; transform: scale(0.9); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; }
-  .mask-line > span { transform: none; }
-  .fade-up, .fade-down, .fade-left, .fade-right, .scale-in { 
-    opacity: 1; 
-    transform: none; 
-  }
-  * { animation: none !important; transition: none !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

@@ -15,10 +15,10 @@ export default function Contact() {
   return (
     <section id="contact" className="section">
       <div className="shell">
-        <div className="plate-tag stamp-type">Contact — Correspondence</div>
+        <h2 className="plate-tag stamp-type">Contact — Correspondence</h2>
 
         <div className={`${styles.wrap} reveal`}>
-          <h2 className={styles.big}>
+          <h3 className={styles.big}>
             Have something to build?{" "}
             <a
               href={`mailto:${profile.email}`}
@@ -27,7 +27,7 @@ export default function Contact() {
             >
               Let&apos;s talk.
             </a>
-          </h2>
+          </h3>
 
           <div className={styles.stampWrap}>
             <Stamp size={128} inner="OPEN TO WORK" />

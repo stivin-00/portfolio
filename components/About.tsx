@@ -5,7 +5,7 @@ export default function About() {
   return (
     <section id="about" className="section">
       <div className="shell">
-        <div className="plate-tag stamp-type">About — Subject</div>
+        <h2 className="plate-tag stamp-type">About — Subject</h2>
 
         <div className={styles.grid}>
           <p className={styles.statement}>

@@ -1,4 +1,8 @@
+/* Hidden unless the boot script decided the card should play (see lib/intro.ts). */
 .wrap {
+  display: none;
+}
+:global(html[data-intro="play"]) .wrap {
   position: fixed;
   inset: 0;
   z-index: 200;

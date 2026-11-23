@@ -5,7 +5,7 @@ export default function Skills() {
   return (
     <section id="stack" className="section">
       <div className="shell">
-        <div className="plate-tag stamp-type">Stack — Index of Materials</div>
+        <h2 className="plate-tag stamp-type">Stack — Index of Materials</h2>
 
         <div className={styles.list}>
           {stack.map((s, i) => (

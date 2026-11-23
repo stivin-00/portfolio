@@ -5,7 +5,7 @@ export default function Experience() {
   return (
     <section id="experience" className="section">
       <div className="shell">
-        <div className="plate-tag stamp-type">Experience — Achievements & Employment</div>
+        <h2 className="plate-tag stamp-type">Experience — Achievements &amp; Employment</h2>
 
         <div className={styles.list}>
           {experience.map((e) => (
