@@ -1,8 +1,9 @@
-import { logEvent } from "firebase/analytics";
-import { getFirebaseAnalytics } from "./firebase";
+import { loadAnalytics } from "./firebase";
 
 /**
- * Track a custom event in Firebase Analytics
+ * Track a custom event in Firebase Analytics. Fire-and-forget: the SDK is
+ * loaded lazily on first use, and failures (ad blockers, network, missing
+ * config) are swallowed so tracking can never break the page.
  * @param eventName - The name of the event to track
  * @param parameters - Optional parameters to include with the event
  */
@@ -10,25 +11,23 @@ export function trackEvent(
     eventName: string,
     parameters?: Record<string, string | number | boolean>
 ) {
-    const analytics = getFirebaseAnalytics();
+    if (typeof window === "undefined") return;
 
-    if (!analytics) {
-        // Analytics not available (SSR, missing config, or ad blockers)
-        // Fail silently in production
-        if (process.env.NODE_ENV === "development") {
-            console.log(`Analytics event (not tracked): ${eventName}`, parameters);
+    void loadAnalytics().then((handle) => {
+        if (!handle) {
+            if (process.env.NODE_ENV === "development") {
+                console.log(`Analytics event (not tracked): ${eventName}`, parameters);
+            }
+            return;
         }
-        return;
-    }
-
-    try {
-        logEvent(analytics, eventName, parameters);
-    } catch (error) {
-        // Handle errors gracefully (e.g., ad blockers, network issues)
-        if (process.env.NODE_ENV === "development") {
-            console.error("Failed to track event:", eventName, error);
+        try {
+            handle.logEvent(handle.analytics, eventName, parameters);
+        } catch (error) {
+            if (process.env.NODE_ENV === "development") {
+                console.error("Failed to track event:", eventName, error);
+            }
         }
-    }
+    });
 }
 
 /**
@@ -71,6 +70,15 @@ export function trackResumeDownload() {
  */
 export function trackEmailClick() {
     trackEvent("email_click", {
+        action: "contact",
+    });
+}
+
+/**
+ * Track when a user clicks on a WhatsApp link
+ */
+export function trackWhatsAppClick() {
+    trackEvent("whatsapp_click", {
         action: "contact",
     });
 }

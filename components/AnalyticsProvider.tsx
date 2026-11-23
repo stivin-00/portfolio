@@ -1,9 +1,45 @@
 "use client";
 
-import { useEffect, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { getFirebaseAnalytics } from "@/lib/firebase";
-import { logEvent } from "firebase/analytics";
+import { trackEvent } from "@/lib/analytics";
+
+const INTERACTION_EVENTS = ["pointerdown", "keydown", "scroll", "touchstart"] as const;
+const FALLBACK_DELAY_MS = 3500;
+
+/**
+ * Resolves true once the page has settled: on the first interaction, or a
+ * few seconds after `load`, whichever comes first. Keeps the analytics SDK
+ * (and gtag) off the critical path so it doesn't compete with first paint
+ * and hydration.
+ */
+function usePageSettled() {
+    const [settled, setSettled] = useState(false);
+
+    useEffect(() => {
+        let timer = 0;
+        const settle = () => {
+            setSettled(true);
+            cleanup();
+        };
+        const startTimer = () => {
+            timer = window.setTimeout(settle, FALLBACK_DELAY_MS);
+        };
+        const cleanup = () => {
+            window.clearTimeout(timer);
+            window.removeEventListener("load", startTimer);
+            INTERACTION_EVENTS.forEach((e) => window.removeEventListener(e, settle));
+        };
+
+        INTERACTION_EVENTS.forEach((e) => window.addEventListener(e, settle, { once: true, passive: true }));
+        if (document.readyState === "complete") startTimer();
+        else window.addEventListener("load", startTimer, { once: true });
+
+        return cleanup;
+    }, []);
+
+    return settled;
+}
 
 /**
  * Analytics Tracker Component (wrapped in Suspense)
@@ -11,36 +47,22 @@ import { logEvent } from "firebase/analytics";
 function AnalyticsTracker() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const settled = usePageSettled();
 
     useEffect(() => {
-        // Initialize analytics on mount
-        const analytics = getFirebaseAnalytics();
-
-        if (!analytics) {
-            // Analytics not available - fail silently
-            return;
-        }
-
-        // Track page view
-        try {
-            logEvent(analytics, "page_view", {
-                page_path: pathname,
-                page_title: document.title,
-            });
-        } catch (error) {
-            // Handle errors gracefully
-            if (process.env.NODE_ENV === "development") {
-                console.error("Failed to track page view:", error);
-            }
-        }
-    }, [pathname, searchParams]);
+        if (!settled) return;
+        trackEvent("page_view", {
+            page_path: pathname,
+            page_title: document.title,
+        });
+    }, [pathname, searchParams, settled]);
 
     return null;
 }
 
 /**
  * Analytics Provider Component
- * Initializes Firebase Analytics and tracks page views automatically
+ * Loads Firebase Analytics lazily and tracks page views automatically
  */
 export default function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     return (

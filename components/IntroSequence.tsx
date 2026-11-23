@@ -59,6 +59,7 @@ export default function IntroSequence() {
     tl.to(cursorRef.current, { opacity: 0, duration: 0.2 }, "<");
     // The hero starts its own reveal as the iris opens.
     tl.call(() => {
+      root.dataset.intro = "reveal";
       window.dispatchEvent(new Event(INTRO_REVEAL_EVENT));
     });
     tl.to(wrapRef.current, {

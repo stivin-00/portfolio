@@ -1,5 +1,4 @@
-import { initializeApp, getApps, FirebaseApp } from "firebase/app";
-import { getAnalytics, Analytics } from "firebase/analytics";
+import type { Analytics, logEvent as LogEvent } from "firebase/analytics";
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -11,51 +10,39 @@ const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-let app: FirebaseApp | undefined;
-let analytics: Analytics | undefined;
+export type AnalyticsHandle = { analytics: Analytics; logEvent: typeof LogEvent };
+
+let analyticsPromise: Promise<AnalyticsHandle | null> | null = null;
 
 /**
- * Initialize Firebase app
- * Returns the Firebase app instance, initializing it if needed
+ * Loads Firebase Analytics on demand. The SDK is code-split (dynamic import)
+ * so it never sits in the initial JavaScript bundle; it's fetched the first
+ * time an event is tracked. Resolves to null during SSR, when the config is
+ * incomplete, or when analytics isn't supported (e.g. blocked).
  */
-export function getFirebaseApp(): FirebaseApp | undefined {
-    if (typeof window === "undefined") {
-        // Firebase should only be initialized on the client side
-        return undefined;
-    }
+export function loadAnalytics(): Promise<AnalyticsHandle | null> {
+    if (typeof window === "undefined") return Promise.resolve(null);
 
-    if (!app && getApps().length === 0) {
-        // Check if all required config values are present
+    if (!analyticsPromise) {
         const hasRequiredConfig = Object.values(firebaseConfig).every((value) => value);
-
         if (!hasRequiredConfig) {
-            console.warn("Firebase config is incomplete. Analytics will not be initialized.");
-            return undefined;
+            if (process.env.NODE_ENV === "development") {
+                console.warn("Firebase config is incomplete. Analytics will not be initialized.");
+            }
+            analyticsPromise = Promise.resolve(null);
+            return analyticsPromise;
         }
 
-        app = initializeApp(firebaseConfig);
-    } else if (!app && getApps().length > 0) {
-        app = getApps()[0];
+        analyticsPromise = (async () => {
+            const [{ initializeApp, getApps }, analyticsModule] = await Promise.all([
+                import("firebase/app"),
+                import("firebase/analytics"),
+            ]);
+            if (!(await analyticsModule.isSupported())) return null;
+            const app = getApps()[0] ?? initializeApp(firebaseConfig);
+            return { analytics: analyticsModule.getAnalytics(app), logEvent: analyticsModule.logEvent };
+        })().catch(() => null);
     }
 
-    return app;
-}
-
-/**
- * Get Firebase Analytics instance
- * Returns undefined if Analytics is not available (e.g., during SSR or if config is missing)
- */
-export function getFirebaseAnalytics(): Analytics | undefined {
-    if (typeof window === "undefined") {
-        return undefined;
-    }
-
-    if (!analytics) {
-        const firebaseApp = getFirebaseApp();
-        if (firebaseApp && firebaseConfig.measurementId) {
-            analytics = getAnalytics(firebaseApp);
-        }
-    }
-
-    return analytics;
+    return analyticsPromise;
 }

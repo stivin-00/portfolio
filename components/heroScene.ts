@@ -75,6 +75,7 @@ export class HeroScene {
   private pointsMat!: THREE.ShaderMaterial;
   private raf = 0;
   private disposed = false;
+  private running = true;
   private target = { x: 0, y: 0 };
 
   constructor(private canvas: HTMLCanvasElement, private container: HTMLElement) {
@@ -176,6 +177,14 @@ export class HeroScene {
     this.group.rotation.set(-0.3, 0.6, 0.1);
   }
 
+  /** Pauses the render loop (e.g. while the hero is scrolled out of view). */
+  setActive(active: boolean) {
+    if (this.disposed || active === this.running) return;
+    this.running = active;
+    if (active) this.raf = requestAnimationFrame(this.animate);
+    else cancelAnimationFrame(this.raf);
+  }
+
   setProgress(v: number) {
     this.linesMat.uniforms.uProgress.value = v;
     this.pointsMat.uniforms.uProgress.value = v;
@@ -197,7 +206,7 @@ export class HeroScene {
   };
 
   private animate = () => {
-    if (this.disposed) return;
+    if (this.disposed || !this.running) return;
     this.group.rotation.x += (this.target.x - this.group.rotation.x) * 0.04;
     this.group.rotation.y += (this.target.y + 0.6 - this.group.rotation.y) * 0.04 + 0.0007;
     this.renderer.render(this.scene, this.camera);

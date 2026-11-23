@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import HeroSpecimen from "@/components/HeroSpecimen";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
 import Experience from "@/components/Experience";
@@ -15,7 +16,7 @@ export default function Home() {
       <ScrollFx />
 
       <main id="main" tabIndex={-1}>
-        <Hero />
+        <Hero backdrop={<HeroSpecimen />} />
         <TornDivider seed={11} />
         <About />
         <TornDivider seed={22} />

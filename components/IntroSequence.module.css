@@ -2,7 +2,8 @@
 .wrap {
   display: none;
 }
-:global(html[data-intro="play"]) .wrap {
+:global(html[data-intro="play"]) .wrap,
+:global(html[data-intro="reveal"]) .wrap {
   position: fixed;
   inset: 0;
   z-index: 200;

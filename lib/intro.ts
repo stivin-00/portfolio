@@ -6,6 +6,9 @@
  * this session, motion allowed). Everything that animates the hero waits for
  * the card's iris-wipe instead of guessing with a fixed delay, and starts
  * immediately when there is no card.
+ *
+ * States on <html data-intro>: "play" (card on screen) → "reveal" (iris-wipe
+ * running, hero revealing) → "done". Absent when the card is skipped.
  */
 export const INTRO_REVEAL_EVENT = "intro:reveal";
 

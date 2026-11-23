@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Archivo, Special_Elite, Playfair_Display } from "next/font/google";
+import { Archivo, Special_Elite, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
 import GrainOverlay from "@/components/GrainOverlay";
@@ -8,18 +8,10 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { BOOT_SCRIPT } from "@/lib/intro";
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
-
+// Variable fonts: one file per style instead of one per weight.
 const archivo = Archivo({
   subsets: ["latin"],
   variable: "--font-archivo",
-  weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 
@@ -33,7 +25,6 @@ const specialElite = Special_Elite({
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
-  weight: ["400", "500", "600", "700", "800", "900"],
   style: ["normal", "italic"],
   display: "swap",
 });
@@ -69,7 +60,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${archivo.variable} ${specialElite.variable} ${playfair.variable}`}
+      className={`${archivo.variable} ${specialElite.variable} ${playfair.variable}`}
       // The boot script adds data-js / data-intro before hydration.
       suppressHydrationWarning
     >
