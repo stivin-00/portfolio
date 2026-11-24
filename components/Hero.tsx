@@ -6,7 +6,7 @@ import HeroCanvas from "./HeroCanvas";
 import Stamp from "./Stamp";
 import styles from "./Hero.module.css";
 import { profile } from "@/lib/data";
-import { onHeroReveal } from "@/lib/intro";
+import { introIsPlaying, onHeroReveal } from "@/lib/intro";
 import { trackCTAClick, trackResumeDownload } from "@/lib/analytics";
 
 const HEADLINE = "I build fintech and enterprise products people trust with";
@@ -43,14 +43,22 @@ export default function Hero({ backdrop }: { backdrop?: React.ReactNode }) {
 
     const words = root.querySelectorAll(".mask-word > span");
     const rest = root.querySelectorAll(".reveal");
+    // With the title card, the headline is already in place under it (see globals.css).
+    const wordsAlreadyShown = introIsPlaying();
     let tl: gsap.core.Timeline | null = null;
 
     // Waits for the title card's iris-wipe on first visit; starts at once otherwise.
     const stop = onHeroReveal(() => {
       root.dataset.revealed = "true";
       tl = gsap.timeline();
-      tl.to(words, { y: "0%", duration: 1, stagger: 0.035, ease: "power4.out" });
-      tl.to(rest, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: "power3.out" }, "-=0.75");
+      if (!wordsAlreadyShown) {
+        tl.to(words, { y: "0%", duration: 1, stagger: 0.035, ease: "power4.out" });
+      }
+      tl.to(
+        rest,
+        { opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: "power3.out" },
+        wordsAlreadyShown ? 0.35 : "-=0.75"
+      );
     });
 
     return () => {

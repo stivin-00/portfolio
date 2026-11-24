@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { loadScrollTrigger } from "@/lib/scrollTrigger";
 import styles from "./Projects.module.css";
 import { caseStudies } from "@/lib/data";
 import ProjectMark from "./ProjectMark";
@@ -20,13 +20,11 @@ export default function Projects() {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
     const section = sectionRef.current;
     const track = trackRef.current;
     if (!section || !track) return;
 
-    const mm = gsap.matchMedia();
-    mm.add(HORIZONTAL_QUERY, () => {
+    const horizontalReel = () => {
       section.classList.add(styles.horizontal);
       const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
 
@@ -60,9 +58,19 @@ export default function Projects() {
         section.removeEventListener("focusin", onFocusIn);
         section.classList.remove(styles.horizontal);
       };
+    };
+
+    const mm = gsap.matchMedia();
+    let cancelled = false;
+    // ScrollTrigger is code-split; the stacked list works without it.
+    void loadScrollTrigger().then(() => {
+      if (!cancelled) mm.add(HORIZONTAL_QUERY, horizontalReel);
     });
 
-    return () => mm.revert();
+    return () => {
+      cancelled = true;
+      mm.revert();
+    };
   }, []);
 
   return (

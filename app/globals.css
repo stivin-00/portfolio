@@ -295,6 +295,10 @@ main:focus { outline: none; }
   [data-js] .reveal { opacity: 0; transform: translateY(40px); }
   [data-js] .mask-line > span { transform: translateY(105%); }
   [data-js] .mask-word > span { transform: translateY(110%); }
+  /* When the title card plays it already hides the hero, so the headline is
+     painted in place underneath and the iris-wipe is its reveal (also keeps
+     the LCP at first paint instead of after the intro). */
+  [data-js][data-intro] .mask-word > span { transform: none; }
   [data-js] .fade-up { opacity: 0; transform: translateY(50px); }
   [data-js] .fade-down { opacity: 0; transform: translateY(-50px); }
   [data-js] .fade-left { opacity: 0; transform: translateX(-50px); }

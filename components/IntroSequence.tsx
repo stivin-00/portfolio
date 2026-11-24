@@ -17,7 +17,7 @@ const NAME = profile.handle.toUpperCase() + " — " + profile.name.toUpperCase()
  */
 export default function IntroSequence() {
   const [done, setDone] = useState(false);
-  const [typed, setTyped] = useState("");
+  const typedRef = useRef<HTMLSpanElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const subRef = useRef<HTMLDivElement>(null);
   const roleRef = useRef<HTMLDivElement>(null);
@@ -51,7 +51,10 @@ export default function IntroSequence() {
       n: NAME.length,
       duration: NAME.length * 0.045,
       ease: "none",
-      onUpdate: () => setTyped(NAME.slice(0, Math.floor(state.n))),
+      // Written straight to the DOM: no React re-render per frame.
+      onUpdate: () => {
+        if (typedRef.current) typedRef.current.textContent = NAME.slice(0, Math.floor(state.n));
+      },
     });
     tl.to(subRef.current, { opacity: 1, duration: 0.5 }, "-=0.1");
     tl.to(roleRef.current, { opacity: 1, duration: 0.5 }, "-=0.3");
@@ -86,7 +89,7 @@ export default function IntroSequence() {
       </div>
 
       <div className={styles.title}>
-        {typed}
+        <span ref={typedRef} />
         <span ref={cursorRef} className={styles.cursor}>
           &nbsp;
         </span>
