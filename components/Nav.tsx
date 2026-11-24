@@ -1,25 +1,30 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import styles from "./Nav.module.css";
 import { trackCTAClick } from "@/lib/analytics";
 
+// Absolute hash links so they work from case-file pages too.
 const LINKS = [
-  { href: "#about", label: "About" },
-  { href: "#stack", label: "Stack" },
-  { href: "#experience", label: "Experience" },
-  { href: "#work", label: "Projects" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#work", label: "Work" },
+  { href: "/#experience", label: "Experience" },
+  { href: "/#stack", label: "Stack" },
+  { href: "/#services", label: "Services" },
+  { href: "/#about", label: "About" },
 ];
 
 export default function Nav() {
   const ctaRef = useRef<HTMLAnchorElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false);
 
+  // Magnetic CTA on mouse devices.
   useEffect(() => {
     const el = ctaRef.current;
     if (!el) return;
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const strength = 0.35;
     const onMove = (e: MouseEvent) => {
@@ -38,26 +43,58 @@ export default function Nav() {
     };
   }, []);
 
+  // Mobile menu: Escape closes and returns focus to the toggle.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const close = () => setOpen(false);
+
   return (
     <header className={styles.nav}>
-      <a href="#top" className={styles.mark}>
+      <a href="/#top" className={styles.mark} aria-label="Ekele Stephen Agbakwuru, back to the top">
         E.S. AGBAKWURU
       </a>
-      <nav className={styles.links}>
+
+      <nav id="site-menu" className={`${styles.links} ${open ? styles.open : ""}`} aria-label="Primary">
         {LINKS.map((l) => (
-          <a key={l.href} href={l.href}>
+          <a key={l.href} href={l.href} onClick={close}>
             {l.label}
           </a>
         ))}
+        <a href="/#contact" onClick={close} className={styles.menuOnly}>
+          Contact
+        </a>
       </nav>
-      <a
-        ref={ctaRef}
-        href="#contact"
-        className={styles.cta}
-        onClick={() => trackCTAClick("Open dossier")}
-      >
-        Open dossier ↗
-      </a>
+
+      <div className={styles.right}>
+        <a
+          ref={ctaRef}
+          href="/#contact"
+          className={styles.cta}
+          onClick={() => trackCTAClick("Let's talk (nav)")}
+        >
+          Let&apos;s talk <span aria-hidden="true">↗</span>
+        </a>
+        <button
+          ref={menuButtonRef}
+          type="button"
+          className={styles.menuButton}
+          aria-expanded={open}
+          aria-controls="site-menu"
+          onClick={() => setOpen((o) => !o)}
+        >
+          {open ? "Close" : "Menu"}
+        </button>
+      </div>
     </header>
   );
 }
