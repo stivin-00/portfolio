@@ -41,33 +41,65 @@
 .stampWrap svg { animation: spin 46s linear infinite; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-.row {
-  margin-top: 3.5rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2.5rem;
-  border-top: 1px solid var(--line);
-  padding-top: 2rem;
+.note {
+  margin-top: 1.4rem;
+  max-width: 52ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink-dim);
+  font-weight: 300;
 }
 
-.col {
+/* ---------- Channels ledger ---------- */
+.channels {
+  list-style: none;
+  margin: 3.5rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1px solid var(--line);
+}
+@media (min-width: 700px) {
+  .channels { grid-template-columns: repeat(2, 1fr); column-gap: 2.5rem; }
+}
+@media (min-width: 1100px) {
+  .channels { grid-template-columns: repeat(3, 1fr); }
+}
+
+.channel {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr auto;
+  align-items: baseline;
+  gap: 1rem;
+  min-height: 48px;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink-dim);
+  transition: color 0.25s ease, padding 0.25s ease;
+}
+.channel:hover {
+  color: var(--ink);
+  padding-left: 0.4rem;
+}
+.channelLabel {
   font-family: var(--font-stamp);
   font-size: 0.62rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-mute);
 }
-.col a, .col span.value {
-  display: block;
-  margin-top: 0.6rem;
-  color: var(--ink-dim);
-  text-decoration: none;
-  font-family: var(--font-body);
-  text-transform: none;
-  letter-spacing: 0;
-  font-size: 0.92rem;
+.channelValue {
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
 }
-.col a:hover { color: var(--ink); }
+@media (max-width: 480px) {
+  .channel { grid-template-columns: 4.6rem 1fr auto; gap: 0.75rem; }
+  .channelValue { font-size: 0.9rem; }
+}
+.channelArrow {
+  color: var(--ink-mute);
+}
 
 .cvSection {
   margin-top: 3rem;
@@ -93,8 +125,10 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
+/* Sits behind the label (z-index -1 inside the isolated button) so the text stays visible on hover. */
 .cvButton::before {
   content: '';
   position: absolute;
@@ -104,7 +138,7 @@
   height: 100%;
   background: var(--bg);
   transition: left 0.4s ease;
-  z-index: 0;
+  z-index: -1;
 }
 
 .cvButton:hover::before {
