@@ -60,8 +60,8 @@ export default function Nav() {
 
   return (
     <header className={styles.nav}>
-      <a href="/#top" className={styles.mark} aria-label="Ekele Stephen Agbakwuru, back to the top">
-        E.S. AGBAKWURU
+      <a href="/#top" className={styles.mark}>
+        E.S. AGBAKWURU<span className="sr-only"> (Ekele Stephen Agbakwuru), back to the top</span>
       </a>
 
       <nav id="site-menu" className={`${styles.links} ${open ? styles.open : ""}`} aria-label="Primary">

@@ -12,10 +12,12 @@ import Contact from "@/components/Contact";
 import ScrollFx from "@/components/ScrollFx";
 import TornDivider from "@/components/TornDivider";
 import IntroSequence from "@/components/IntroSequence";
+import PersonJsonLd from "@/components/PersonJsonLd";
 
 export default function Home() {
   return (
     <>
+      <PersonJsonLd />
       <IntroSequence />
       <ScrollFx />
 
