@@ -17,14 +17,14 @@ export default function ScrollFx() {
         return;
       }
 
+      // One staggered reveal per section (or header / [data-fx-group]).
       const groupBySection = (selector: string) => {
-        const groups = new Map<string, Element[]>();
+        const groups = new Map<Element, Element[]>();
         document.querySelectorAll(selector).forEach((el) => {
-          const section = el.closest("section");
-          if (!section || section.id === "top") return; // hero animates itself on load
-          const key = section.id || "root";
-          if (!groups.has(key)) groups.set(key, []);
-          groups.get(key)!.push(el);
+          const group = el.closest("[data-fx-group], section, header, main") ?? document.body;
+          if (group.id === "top") return; // hero animates itself on load
+          if (!groups.has(group)) groups.set(group, []);
+          groups.get(group)!.push(el);
         });
         return groups;
       };

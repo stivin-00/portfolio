@@ -1,26 +1,40 @@
-"use client";
-
 /**
  * Every mark below is generated from a small loop of math, not an
- * imported image — each project gets a distinct procedural pattern
- * that echoes what it is (a grid for a housing platform, an orbiting
- * system for a live product, a stepped facade for a real-estate site).
+ * imported image. Each project gets a distinct procedural pattern that
+ * echoes what it is: a grid for a housing platform, an orbiting system
+ * for a payments app, a stepped facade for a restaurant, stacked pages
+ * for CMS-driven sites, a role tree for a multi-role dashboard, a
+ * calendar for leave management and a waveform for a voice app.
+ * Purely decorative, so hidden from assistive tech.
  */
+import type { MarkVariant } from "@/lib/data";
+
+const W = 220;
+const H = 180;
+
+function seeded(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+}
+
+function Svg({ children }: { children: React.ReactNode }) {
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="mark-svg" aria-hidden="true" focusable="false">
+      {children}
+    </svg>
+  );
+}
 
 function GridMark() {
   const cells = [];
   const cols = 6;
   const rows = 5;
-  const w = 220;
-  const h = 180;
-  const cw = w / cols;
-  const ch = h / rows;
-  let seed = 7;
-  const rand = () => {
-    seed = (seed * 9301 + 49297) % 233280;
-    return seed / 233280;
-  };
-
+  const cw = W / cols;
+  const ch = H / rows;
+  const rand = seeded(7);
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       const filled = rand() > 0.62;
@@ -38,17 +52,13 @@ function GridMark() {
       );
     }
   }
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="mark-svg" role="img" aria-label="Grid pattern representing Homegrid">
-      {cells}
-    </svg>
-  );
+  return <Svg>{cells}</Svg>;
 }
 
 function OrbitMark() {
   const rings = [30, 52, 74];
   return (
-    <svg viewBox="0 0 220 180" className="mark-svg" role="img" aria-label="Orbit pattern representing Martiful">
+    <Svg>
       <g transform="translate(110 90)">
         {rings.map((r, i) => (
           <circle key={r} r={r} fill="none" stroke="var(--line-strong)" opacity={0.9 - i * 0.15} />
@@ -57,66 +67,161 @@ function OrbitMark() {
         {rings.map((r, i) => {
           const angle = (i / rings.length) * Math.PI * 2 + 0.6;
           return (
-            <circle
-              key={`dot-${r}`}
-              cx={Math.cos(angle) * r}
-              cy={Math.sin(angle) * r}
-              r={3}
-              fill="var(--ink-dim)"
-            />
+            <circle key={`dot-${r}`} cx={Math.cos(angle) * r} cy={Math.sin(angle) * r} r={3} fill="var(--ink-dim)" />
           );
         })}
       </g>
-    </svg>
+    </Svg>
   );
 }
 
 function FacadeMark() {
   const steps = 7;
   const bars = [];
-  let seed = 21;
-  const rand = () => {
-    seed = (seed * 9301 + 49297) % 233280;
-    return seed / 233280;
-  };
-  const w = 220;
-  const barW = w / steps;
+  const rand = seeded(21);
+  const barW = W / steps;
   for (let i = 0; i < steps; i++) {
     const height = 40 + rand() * 110;
     bars.push(
-      <rect
-        key={i}
-        x={i * barW + 2}
-        y={180 - height}
-        width={barW - 4}
-        height={height}
-        fill="none"
-        stroke="var(--line-strong)"
-      />
+      <rect key={i} x={i * barW + 2} y={H - height} width={barW - 4} height={height} fill="none" stroke="var(--line-strong)" />
     );
     if (rand() > 0.5) {
       bars.push(
+        <rect key={`w-${i}`} x={i * barW + 6} y={H - height + 10} width={barW - 12} height={10} fill="var(--ink)" opacity={0.22} />
+      );
+    }
+  }
+  return <Svg>{bars}</Svg>;
+}
+
+/** Overlapping documents with ruled "content" lines: CMS-managed pages. */
+function PagesMark() {
+  const rand = seeded(33);
+  const pages = [0, 1, 2].map((i) => {
+    const x = 34 + i * 34;
+    const y = 18 + i * 16;
+    const lines = Array.from({ length: 6 }, (_, l) => {
+      const len = 40 + rand() * 46;
+      return <line key={l} x1={x + 12} y1={y + 28 + l * 14} x2={x + 12 + len} y2={y + 28 + l * 14} stroke="var(--line-strong)" />;
+    });
+    return (
+      <g key={i}>
+        <rect x={x} y={y} width={104} height={128} fill="var(--bg-raised)" stroke="var(--line-strong)" />
+        <rect x={x + 12} y={y + 10} width={34} height={8} fill="var(--ink)" opacity={0.2 + i * 0.08} />
+        {lines}
+      </g>
+    );
+  });
+  return <Svg>{pages}</Svg>;
+}
+
+/** One admin node branching to operators, then business users: a role hierarchy. */
+function TreeMark() {
+  const levels = [[110], [60, 160], [30, 80, 130, 190]];
+  const ys = [34, 90, 146];
+  const edges: JSX.Element[] = [];
+  for (let l = 0; l < levels.length - 1; l++) {
+    levels[l].forEach((x, i) => {
+      const children = levels[l + 1].slice(i * 2, i * 2 + 2);
+      children.forEach((cx) =>
+        edges.push(<line key={`${l}-${x}-${cx}`} x1={x} y1={ys[l]} x2={cx} y2={ys[l + 1]} stroke="var(--line-strong)" />)
+      );
+    });
+  }
+  const nodes = levels.flatMap((row, l) =>
+    row.map((x) => (
+      <circle
+        key={`n-${l}-${x}`}
+        cx={x}
+        cy={ys[l]}
+        r={10 - l * 2}
+        fill={l === 0 ? "var(--ink)" : "var(--bg-raised)"}
+        fillOpacity={l === 0 ? 0.3 : 1}
+        stroke="var(--ink-dim)"
+      />
+    ))
+  );
+  return (
+    <Svg>
+      {edges}
+      {nodes}
+    </Svg>
+  );
+}
+
+/** A month grid with a few blocked-out ranges: leave requests. */
+function CalendarMark() {
+  const cols = 7;
+  const rows = 5;
+  const cw = 26;
+  const ch = 26;
+  const ox = (W - cols * cw) / 2;
+  const oy = 30;
+  const ranges = new Set([9, 10, 11, 22, 23, 30]);
+  const cells = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const i = r * cols + c;
+      cells.push(
         <rect
-          key={`w-${i}`}
-          x={i * barW + 6}
-          y={180 - height + 10}
-          width={barW - 12}
-          height={10}
-          fill="var(--ink)"
-          opacity={0.22}
+          key={i}
+          x={ox + c * cw + 2}
+          y={oy + r * ch + 2}
+          width={cw - 4}
+          height={ch - 4}
+          fill={ranges.has(i) ? "var(--ink)" : "none"}
+          fillOpacity={ranges.has(i) ? 0.22 : 0}
+          stroke="var(--line-strong)"
         />
       );
     }
   }
   return (
-    <svg viewBox="0 0 220 180" className="mark-svg" role="img" aria-label="Facade pattern representing The House">
-      {bars}
-    </svg>
+    <Svg>
+      <line x1={ox} y1={18} x2={ox + cols * cw} y2={18} stroke="var(--ink-dim)" />
+      {cells}
+    </Svg>
   );
 }
 
-export default function ProjectMark({ variant }: { variant: "grid" | "orbit" | "facade" }) {
-  if (variant === "grid") return <GridMark />;
-  if (variant === "orbit") return <OrbitMark />;
-  return <FacadeMark />;
+/** A spoken waveform: bar heights from two overlapping sines. */
+function WaveMark() {
+  const bars = 28;
+  const gap = W / bars;
+  return (
+    <Svg>
+      <line x1={0} y1={H / 2} x2={W} y2={H / 2} stroke="var(--line)" />
+      {Array.from({ length: bars }, (_, i) => {
+        const t = i / (bars - 1);
+        const amp = Math.abs(Math.sin(t * Math.PI * 3.2) * 0.7 + Math.sin(t * Math.PI * 7.1) * 0.3) * Math.sin(t * Math.PI);
+        const h = 8 + amp * 120;
+        return (
+          <rect
+            key={i}
+            x={i * gap + gap * 0.3}
+            y={H / 2 - h / 2}
+            width={gap * 0.4}
+            height={h}
+            fill="var(--ink)"
+            opacity={0.18 + amp * 0.5}
+          />
+        );
+      })}
+    </Svg>
+  );
+}
+
+const MARKS: Record<MarkVariant, () => JSX.Element> = {
+  grid: GridMark,
+  orbit: OrbitMark,
+  facade: FacadeMark,
+  pages: PagesMark,
+  tree: TreeMark,
+  calendar: CalendarMark,
+  wave: WaveMark,
+};
+
+export default function ProjectMark({ variant }: { variant: MarkVariant }) {
+  const Mark = MARKS[variant];
+  return <Mark />;
 }
