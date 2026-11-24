@@ -1,5 +1,5 @@
 import styles from "./About.module.css";
-import { profile, education, languages } from "@/lib/data";
+import { profile, education } from "@/lib/data";
 
 export default function About() {
   return (
@@ -52,12 +52,6 @@ export default function About() {
                   </dd>
                 </div>
               ))}
-              <div className={`${styles.factRow} reveal`}>
-                <dt className={styles.factLabel}>Languages</dt>
-                <dd className={styles.factValue}>
-                  {languages.map((l) => `${l.name} (${l.level.toLowerCase()})`).join(", ")}
-                </dd>
-              </div>
               <div className={`${styles.factRow} reveal`}>
                 <dt className={styles.factLabel}>Works</dt>
                 <dd className={styles.factValue}>{profile.workPreference}, from {profile.location}</dd>
