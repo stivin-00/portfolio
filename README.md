@@ -26,8 +26,8 @@ Every visual is generated in code — nothing imported:
   canvas and cycled at 12fps, blended over the page at low opacity.
 - **Torn-paper dividers** (`components/TornDivider.tsx`): a seeded pseudo-random walk.
 - **Vintage seal** (`components/Stamp.tsx`): circular text set along a computed SVG path.
-- **Project marks** (`components/ProjectMark.tsx`): seven procedural patterns (grid, orbit,
-  facade, pages, role tree, calendar, waveform).
+- **Project marks** (`components/ProjectMark.tsx`): six procedural patterns (grid, orbit,
+  facade, pages, role tree, waveform).
 - **Opening title card** (`components/IntroSequence.tsx`): typewriter + iris-wipe, once per
   session on the home page; skipped for `prefers-reduced-motion`. A tiny boot script in
   `app/layout.tsx` decides before first paint, so there's no flash and no-JS visitors never

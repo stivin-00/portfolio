@@ -160,7 +160,7 @@ export const experience = [
   },
 ];
 
-export type MarkVariant = "grid" | "orbit" | "facade" | "pages" | "tree" | "calendar" | "wave";
+export type MarkVariant = "grid" | "orbit" | "facade" | "pages" | "tree" | "wave";
 
 export type CaseLink = { label: string; href: string };
 
@@ -274,7 +274,7 @@ export const caseStudies: CaseStudy[] = [
     number: "03",
     name: "Martiful",
     kind: "Fintech web app",
-    context: "Personal project",
+    context: "Freelance client work",
     role: "Developer",
     status: "Live",
     summary:
@@ -298,7 +298,7 @@ export const caseStudies: CaseStudy[] = [
     number: "04",
     name: "The House",
     kind: "Restaurant ordering app",
-    context: "Personal project",
+    context: "Freelance client work",
     role: "Developer",
     status: "Live",
     summary:
@@ -320,7 +320,7 @@ export const caseStudies: CaseStudy[] = [
     number: "05",
     name: "Eazybrew",
     kind: "Multi-role admin dashboard",
-    context: "Personal project",
+    context: "Freelance client work",
     role: "Developer",
     // TODO: confirm the status.
     status: "No public link",
@@ -341,45 +341,8 @@ export const caseStudies: CaseStudy[] = [
     mark: "tree",
   },
   {
-    slug: "ascendx",
-    number: "06",
-    name: "AscendX",
-    kind: "Leave management system",
-    context: "Technical assessment",
-    role: "Full-stack developer",
-    status: "Live demo",
-    summary:
-      "A full-stack leave management system with JWT authentication and role-based access control, built end to end as a technical assessment.",
-    problem:
-      "A technical assessment: design and ship a full-stack leave management system, from the database to a deployed frontend.",
-    approach: [
-      "Built the API in NestJS with Prisma and PostgreSQL.",
-      "Secured it with JWT authentication and role-based access control (RBAC).",
-      "Built the frontend in React 19 with Redux Toolkit and RTK Query, styled with Tailwind CSS.",
-      "Deployed the app on Railway and Vercel.",
-    ],
-    stack: [
-      "NestJS",
-      "Prisma",
-      "PostgreSQL",
-      "JWT",
-      "RBAC",
-      "React 19",
-      "Redux Toolkit",
-      "RTK Query",
-      "Tailwind CSS",
-      "Railway",
-      "Vercel",
-    ],
-    // TODO: add the assessment result if you can share it.
-    outcome: ["Deployed end to end, with a live demo at ascendx-frontend.vercel.app."],
-    // TODO: add the GitHub repository link if it's public.
-    links: [{ label: "Open the live demo", href: "https://ascendx-frontend.vercel.app" }],
-    mark: "calendar",
-  },
-  {
     slug: "on-device-voice-app",
-    number: "07",
+    number: "06",
     name: "On-device Voice App",
     kind: "Voice to-do mobile app",
     context: "Technical assessment",

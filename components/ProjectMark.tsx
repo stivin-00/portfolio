@@ -3,8 +3,8 @@
  * imported image. Each project gets a distinct procedural pattern that
  * echoes what it is: a grid for a housing platform, an orbiting system
  * for a payments app, a stepped facade for a restaurant, stacked pages
- * for CMS-driven sites, a role tree for a multi-role dashboard, a
- * calendar for leave management and a waveform for a voice app.
+ * for CMS-driven sites, a role tree for a multi-role dashboard and a
+ * waveform for a voice app.
  * Purely decorative, so hidden from assistive tech.
  */
 import type { MarkVariant } from "@/lib/data";
@@ -149,41 +149,6 @@ function TreeMark() {
   );
 }
 
-/** A month grid with a few blocked-out ranges: leave requests. */
-function CalendarMark() {
-  const cols = 7;
-  const rows = 5;
-  const cw = 26;
-  const ch = 26;
-  const ox = (W - cols * cw) / 2;
-  const oy = 30;
-  const ranges = new Set([9, 10, 11, 22, 23, 30]);
-  const cells = [];
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const i = r * cols + c;
-      cells.push(
-        <rect
-          key={i}
-          x={ox + c * cw + 2}
-          y={oy + r * ch + 2}
-          width={cw - 4}
-          height={ch - 4}
-          fill={ranges.has(i) ? "var(--ink)" : "none"}
-          fillOpacity={ranges.has(i) ? 0.22 : 0}
-          stroke="var(--line-strong)"
-        />
-      );
-    }
-  }
-  return (
-    <Svg>
-      <line x1={ox} y1={18} x2={ox + cols * cw} y2={18} stroke="var(--ink-dim)" />
-      {cells}
-    </Svg>
-  );
-}
-
 /** A spoken waveform: bar heights from two overlapping sines. */
 function WaveMark() {
   const bars = 28;
@@ -217,7 +182,6 @@ const MARKS: Record<MarkVariant, () => JSX.Element> = {
   facade: FacadeMark,
   pages: PagesMark,
   tree: TreeMark,
-  calendar: CalendarMark,
   wave: WaveMark,
 };
 
